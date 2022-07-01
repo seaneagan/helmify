@@ -204,7 +204,7 @@ func processPodContainer(name string, appMeta helmify.AppMetadata, c corev1.Cont
 	}
 	repo, tag := c.Image[:index], c.Image[index+1:]
 	containerName := strcase.ToLowerCamel(c.Name)
-	c.Image = fmt.Sprintf("{{ .Values.%[1]s.%[2]s.image.repository }}:{{ .Values.%[1]s.%[2]s.image.tag | default .Chart.AppVersion }}", name, containerName)
+	c.Image = fmt.Sprintf("{{ tpl .Values.%[1]s.%[2]s.image.repository . }}:{{ tpl .Values.%[1]s.%[2]s.image.tag . | default .Chart.AppVersion }}", name, containerName)
 
 	err := unstructured.SetNestedField(*values, repo, name, containerName, "image", "repository")
 	if err != nil {
